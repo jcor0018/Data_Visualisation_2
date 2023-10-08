@@ -1,6 +1,6 @@
 {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "title": "Map of Sold Houses in Melbourne",
+    "title": "Range of Expected House Prices",
     "params": [
       {
         "name": "LGA_Selector",
@@ -72,73 +72,12 @@
         }
       }
     ],
-    "vconcat": [
-      {
-        "width": 800,
-        "height": 450,
-        
-        "layer": [
-          {
-            "data": {
-              "url": "data/LGA_POLYGON2.json",
-              "format": {
-                "type": "topojson", 
-                "feature": "LGA_POLYGON"
-              }
-            },
-            "transform": [
-              {
-                "lookup": "properties.LGA_NAME",
-                "from": {
-                  "data": {
-                    "url": "data/Melbourne_housing_edit.csv"
-                  },
-                  "key": "CouncilArea",
-                  "fields": ["Price", "CouncilArea"]
-                }
-              },
-              {
-                "joinaggregate": [{"op": "sum", "field": "Price", "as": "SumPri"}],
-                "groupby": ["CouncilArea"]
-              }
-            ],
-            
-            "mark": {
-              "type": "geoshape", 
-              "tooltip": true
-            }
-            
-          },
-          {
-            "data":{
-              "url": "data/Melbourne_housing_edit.csv"
-            },
-            "mark":"point",
-            "encoding": {
-              "latitude":{
-                "field": "Lattitude",
-                "type": "quantitative"
-              },
-              "longitude":{
-                "field": "Longtitude",
-                "type": "quantitative"
-              },
-              "color":{"field": "Price", "scale": {"type": "linear"}}
-            },
-            "transform": [
-              {
-                "filter": "LGA_Selector == null || datum.CouncilArea == LGA_Selector"
-              }
-            ]
-          }
-        ]
-      },
-      {
+    
       "data": {
         "url": "data/Melbourne_housing_edit.csv"
       },
-      "height": 400,
-      "width": 800,
+      "height": 300,
+      "width": 700,
       "transform": [
         {
           "filter": "LGA_Selector == null || datum.CouncilArea == LGA_Selector"
@@ -293,5 +232,3 @@
               } 
           ]     
       }
-    ]
-  }

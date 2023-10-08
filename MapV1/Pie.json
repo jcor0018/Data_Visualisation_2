@@ -1,17 +1,18 @@
 {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": "Methods Houses Have been sold",
     "data": {
-        "url": "Melbourne_housing_edit.csv"
+        "url": "data/Melbourne_housing_edit.csv"
     },
-    "width": 400,
-    "height": 400,
+    "width": 200,
+    "height": 200,
     "transform": [
         {
-            "joinaggregate": [{"op": "sum", "field": "count", "as": "SumMeth"}],
+            "aggregate": [{"op": "sum", "field": "count", "as": "SumMeth"}],
             "groupby": ["Method"]
         }
     ],
-    "mark": "arc",
+    "mark": {"type": "arc", "tooltip":{"content": "data"}, "innerRadius": 50},
     "encoding": {
         "theta":{
             "field": "SumMeth",

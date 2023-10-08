@@ -1,6 +1,6 @@
 {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "title": "Map of Sold Houses in Melbourne",
+    "title": "Map of Normalised Average House Price by Number of Bedroom",
     "width": 650,
     "height": 400,
     "layer":[
@@ -40,8 +40,7 @@
                 "color": {
                     "field": "Sumfield",
                     "type": "quantitative",
-                    "title": "Normalised Average House Price by Number of Bedrooms"
-                    
+                    "title": "Price ($AUD) Per Bedrooms"
                 },
                 "tooltip":[
                     {

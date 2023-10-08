@@ -1,82 +1,83 @@
 {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    
+    "params": [
+      {
+        "name": "LGA_Selector",
+        "bind": {
+          "input": "select",
+          "options": [
+            null,
+            "BANYULE",
+            "BAYSIDE",
+            "BOROONDARA",
+            "BRIMBANK",
+            "CASEY",
+            "DAREBIN",
+            "FRANKSTON",
+            "GLEN EIRA",
+            "GREATER DANDENONG",
+            "HOBSONS BAY",
+            "HUME",
+            "KINGSTON",
+            "KNOX",
+            "MANNINGHAM",
+            "MARIBYRNONG",
+            "MAROONDAH",
+            "MELBOURNE",
+            "MELTON",
+            "MONASH",
+            "MOONEE VALLEY",
+            "MERRI-BEK",
+            "NILLUMBIK",
+            "PORT PHILLIP",
+            "STONNINGTON",
+            "WHITEHORSE",
+            "WHITTLESEA",
+            "WYNDHAM",
+            "YARRA"
+          ],
+          "labels":[
+            "Show None",
+            "Banyule City Council",
+            "Bayside City Council",
+            "Boroondara City Council",
+            "Brimbank City Council",
+            "Casey City Council",
+            "Darebin City Council",
+            "Frankston City Council",
+            "Glen Eira City Council",
+            "Greater Dandenong City Council",
+            "Hobsons Bay City Council",
+            "Hume City Council",
+            "Kingston City Council",
+            "Knox City Council",
+            "Manningham City Council",
+            "Maribyrnong City Council",
+            "Maroondah City Council",
+            "Melbourne City Council",
+            "Melton City Council",
+            "Monash City Council",
+            "Moonee Valley City Council",
+            "Merri-Bek City Council",
+            "Nillumbik Shire Council",
+            "Port Phillip City Council",
+            "Stonnington City Council",
+            "Whitehorse City Council",
+            "Whittlesea City Council",
+            "Wyndham City Council",
+            "Yarra City Council"
+          ],
+          "name": "LGA Selection: "
+        }
+      }
+    ],
+    "hconcat":[{
       "data": {
         "url": "data/Melbourne_housing_edit.csv"
       },
       "height": 400,
       "width": 800,
-      "params": [
-        {
-          "name": "LGA_Selector",
-          "bind": {
-            "input": "select",
-            "options": [
-              null,
-              "BANYULE",
-              "BAYSIDE",
-              "BOROONDARA",
-              "BRIMBANK",
-              "CASEY",
-              "DAREBIN",
-              "FRANKSTON",
-              "GLEN EIRA",
-              "GREATER DANDENONG",
-              "HOBSONS BAY",
-              "HUME",
-              "KINGSTON",
-              "KNOX",
-              "MANNINGHAM",
-              "MARIBYRNONG",
-              "MAROONDAH",
-              "MELBOURNE",
-              "MELTON",
-              "MONASH",
-              "MOONEE VALLEY",
-              "MERRI-BEK",
-              "NILLUMBIK",
-              "PORT PHILLIP",
-              "STONNINGTON",
-              "WHITEHORSE",
-              "WHITTLESEA",
-              "WYNDHAM",
-              "YARRA"
-            ],
-            "labels":[
-              "Show None",
-              "Banyule City Council",
-              "Bayside City Council",
-              "Boroondara City Council",
-              "Brimbank City Council",
-              "Casey City Council",
-              "Darebin City Council",
-              "Frankston City Council",
-              "Glen Eira City Council",
-              "Greater Dandenong City Council",
-              "Hobsons Bay City Council",
-              "Hume City Council",
-              "Kingston City Council",
-              "Knox City Council",
-              "Manningham City Council",
-              "Maribyrnong City Council",
-              "Maroondah City Council",
-              "Melbourne City Council",
-              "Melton City Council",
-              "Monash City Council",
-              "Moonee Valley City Council",
-              "Merri-Bek City Council",
-              "Nillumbik Shire Council",
-              "Port Phillip City Council",
-              "Stonnington City Council",
-              "Whitehorse City Council",
-              "Whittlesea City Council",
-              "Wyndham City Council",
-              "Yarra City Council"
-            ],
-            "name": "LGA Selection: "
-          }
-        }
-      ],
+    
       "transform": [
         {
           "filter": "LGA_Selector == null || datum.CouncilArea == LGA_Selector"
@@ -230,5 +231,34 @@
                   }
                 }
               } 
-          ]     
+          ]  
+        },
+        {
+          "title": "Methods Houses Have been sold",
+            "data": {
+                "url": "data/Melbourne_housing_edit.csv"
+            },
+            "width": 200,
+            "height": 200,
+            "transform": [
+              {
+                "filter": "LGA_Selector == null || datum.CouncilArea == LGA_Selector"
+              },
+              {
+                "aggregate": [{"op": "sum", "field": "count", "as": "SumMeth"}],
+                "groupby": ["Method"]
+              }
+            ],
+            "mark": {"type": "arc", "tooltip":{"content": "data"}, "innerRadius": 50},
+            "encoding": {
+                "theta":{
+                    "field": "SumMeth",
+                    "type": "quantitative"
+                },
+                "color":{
+                    "field": "Method",
+                    "type": "nominal"
+                }
+            }
+        }]   
       }
