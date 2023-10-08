@@ -1,0 +1,297 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": "Map of Sold Houses in Melbourne",
+    "params": [
+      {
+        "name": "LGA_Selector",
+        "bind": {
+          "input": "select",
+          "options": [
+            null,
+            "BANYULE",
+            "BAYSIDE",
+            "BOROONDARA",
+            "BRIMBANK",
+            "CASEY",
+            "DAREBIN",
+            "FRANKSTON",
+            "GLENEIRA",
+            "GREATERDANDENONG",
+            "HOBSONSBAY",
+            "HUME",
+            "KINGSTON",
+            "KNOX",
+            "MANNINGHAM",
+            "MARIBYRNONG",
+            "MAROONDAH",
+            "MELBOURNE",
+            "MELTON",
+            "MONASH",
+            "MOONEEVALLEY",
+            "MORELAND",
+            "NILLUMBIK",
+            "PORTPHILLIP",
+            "STONNINGTON",
+            "WHITEHORSE",
+            "WHITTLESEA",
+            "WYNDHAM",
+            "YARRA"
+          ],
+          "labels":[
+            "Show None",
+            "Banyule City Council",
+            "Bayside City Council",
+            "Boroondara City Council",
+            "Brimbank City Council",
+            "Casey City Council",
+            "Darebin City Council",
+            "Frankston City Council",
+            "Glen Eira City Council",
+            "Greater Dandenong City Council",
+            "Hobsons Bay City Council",
+            "Hume City Council",
+            "Kingston City Council",
+            "Knox City Council",
+            "Manningham City Council",
+            "Maribyrnong City Council",
+            "Maroondah City Council",
+            "Melbourne City Council",
+            "Melton City Council",
+            "Monash City Council",
+            "Moonee Valley City Council",
+            "Merri-Bek City Council",
+            "Nillumbik Shire Council",
+            "Port Phillip City Council",
+            "Stonnington City Council",
+            "Whitehorse City Council",
+            "Whittlesea City Council",
+            "Wyndham City Council",
+            "Yarra City Council"
+          ],
+          "name": "LGA Selection: "
+        }
+      }
+    ],
+    "vconcat": [
+      {
+        "width": 800,
+        "height": 450,
+        
+        "layer": [
+          {
+            "data": {
+              "url": "data/LGA_POLYGON2.json",
+              "format": {
+                "type": "topojson", 
+                "feature": "LGA_POLYGON"
+              }
+            },
+            "transform": [
+              {
+                "lookup": "properties.LGA_NAME",
+                "from": {
+                  "data": {
+                    "url": "data/Melbourne_housing_edit.csv"
+                  },
+                  "key": "CouncilArea",
+                  "fields": ["Price", "CouncilArea"]
+                }
+              },
+              {
+                "joinaggregate": [{"op": "sum", "field": "Price", "as": "SumPri"}],
+                "groupby": ["CouncilArea"]
+              }
+            ],
+            
+            "mark": {
+              "type": "geoshape", 
+              "tooltip": true
+            }
+            
+          },
+          {
+            "data":{
+              "url": "data/Melbourne_housing_edit.csv"
+            },
+            "mark":"point",
+            "encoding": {
+              "latitude":{
+                "field": "Lattitude",
+                "type": "quantitative"
+              },
+              "longitude":{
+                "field": "Longtitude",
+                "type": "quantitative"
+              },
+              "color":{"field": "Price", "scale": {"type": "linear"}}
+            },
+            "transform": [
+              {
+                "filter": "LGA_Selector == null || datum.CouncilArea == LGA_Selector"
+              }
+            ]
+          }
+        ]
+      },
+      {
+      "data": {
+        "url": "data/Melbourne_housing_edit.csv"
+      },
+      "height": 400,
+      "width": 800,
+      "transform": [
+        {
+          "filter": "LGA_Selector == null || datum.CouncilArea == LGA_Selector"
+        },
+        {
+          "joinaggregate": [{"op": "q1", "field": "Price", "as": "q1House"}],
+          "groupby": ["Bedroom2"]
+        },
+        {
+          "joinaggregate":[{"op": "q3", "field": "Price", "as": "q3House"}],
+          "groupby": ["Bedroom2"]
+        },
+        {
+          "calculate": "((datum.q3House-datum.q1House)*1.5 + datum.q3House)", "as": "IQmax"
+        }
+      ],
+      "layer":[
+        {
+          "mark":{"type": "point"},
+          "encoding": {
+            "x":{
+              "field": "Bedroom2",
+              "type": "ordinal",
+              "title": "Number of Bedrooms"
+            },
+            "y":{
+              "field": "Price",
+              "type": "quantitative",
+              "title": "Sold Price (AUD)"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "bar",
+            "width": 1.5,
+            "tooltip": {"content": "data"}
+            },
+          "encoding": {
+            "x": {
+              "field": "Bedroom2",
+              "type": "ordinal",
+              "title": "Number of Bedrooms"
+            },
+            "y": {
+              "field":"IQmax",
+              "aggregate": "average",
+              "type": "quantitative",
+              "title": "Sold Price (AUD)"
+            },
+            "y2":{
+              "field": "Price",
+              "aggregate":"min"
+            },
+            "color": {        
+              "value": "#000000"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "tick",
+            "width": 25
+            },
+          "encoding": {
+            "x": {
+              "field": "Bedroom2",
+              "type": "ordinal",
+              "title": "Number of Bedrooms"
+            },
+            "y": {
+              "field":"IQmax",
+              "aggregate": "average",
+              "type": "quantitative",
+              "title": "Sold Price (AUD)"
+            },
+            "color": {        
+              "value": "#000000"
+            }
+          }
+        },
+          {
+            "mark": {
+              "type": "bar",
+              "width": 25 
+              },
+              "encoding": {
+                "x": {
+                  "field": "Bedroom2",
+                  "type": "ordinal",
+                  "title": "Number of Bedrooms"
+                },
+                "y": {
+                  "field": "Price",
+                  "aggregate":"q3",
+                  "type": "quantitative",
+                  "title": "Sold Price (AUD)"
+                },
+                "y2":{
+                  "field": "Price",
+                  "aggregate": "q1"
+                },
+                "color": {        
+                  "value": "#395EC7"
+                }
+              }
+            },
+            {
+              "mark": {
+                "type": "tick",
+                "width": 30
+                },
+                "encoding": {
+                  "y": {
+                    "field": "Price",
+                    "aggregate":"median",
+                    "type": "quantitative",
+                    "title": "Sold Price (AUD)"
+                  },
+                  "x": {
+                    "field": "Bedroom2",
+                    "type": "nominal",
+                    "title": "Number of Bedrooms"
+                  },
+                 
+                  "color": {        
+                    "value": "#FFFFFF"
+                  }
+                }
+              }, 
+              {
+                "mark": {
+                  "type": "tick",
+                  "width": 25 
+                  },
+                "encoding": {
+                  "x": {
+                    "field": "Bedroom2",
+                    "type": "ordinal",
+                    "title": "Number of Bedrooms"
+                  },
+                  "y": {
+                    "field": "Price",
+                    "aggregate":"min",
+                    "type": "quantitative",
+                    "title": "Sold Price (AUD)"
+                  },
+                  "color": {        
+                    "value": "#000000"
+                  }
+                }
+              } 
+          ]     
+      }
+    ]
+  }

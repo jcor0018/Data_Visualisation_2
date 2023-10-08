@@ -1,0 +1,16 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "A box plot example showing aggregate statistics for penguin body mass.",
+    "width": 500,
+    "data": 
+    {
+        "url": "data/Melbourne_housing2.csv"
+    },
+    "mark": "boxplot",
+    "encoding": {
+      "x":{"field": "Bedroom2", "type": "ordinal"},
+      "y":{"field": "Price", "type": "quantitative"}
+    }
+
+  }
+  

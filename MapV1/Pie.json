@@ -1,0 +1,25 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "data": {
+        "url": "Melbourne_housing_edit.csv"
+    },
+    "width": 400,
+    "height": 400,
+    "transform": [
+        {
+            "joinaggregate": [{"op": "sum", "field": "count", "as": "SumMeth"}],
+            "groupby": ["Method"]
+        }
+    ],
+    "mark": "arc",
+    "encoding": {
+        "theta":{
+            "field": "SumMeth",
+            "type": "quantitative"
+        },
+        "color":{
+            "field": "Method",
+            "type": "nominal"
+        }
+    }
+}
